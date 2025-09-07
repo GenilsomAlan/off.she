@@ -1,1 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400&display=swap');
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #fff5f5;
+        }
+        .heart-beat {
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .rose-petal {
+            position: absolute;
+            background-color: #ff6b81;
+            opacity: 0.6;
+            border-radius: 50% 0 50% 50%;
+            animation: falling linear infinite;
+        }
+        @keyframes falling {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div id="petals-container" class="fixed inset-0 overflow-hidden pointer-events-none"></div>
+    
+    <div class="max-w-2xl w-full bg-white rounded-xl shadow-lg overflow-hidden" data-aos="fade-up">
+        <div class="relative">
+            <div class="absolute -top-16 left-1/2 transform -translate-x-1/2">
+                <i data-feather="heart" class="heart-beat text-pink-500 w-16 h-16"></i>
+            </div>
+            <div class="p-8 pt-16 text-center">
+                <h1 class="text-3xl font-serif font-bold text-pink-600 mb-6">Desafio Bíblico</h1>
+                
+                <div class="space-y-6 text-gray-700">
+                    <p class="text-lg leading-relaxed" data-aos="fade-right">
+                        Parabéns! Você passou no primeiro desafio (Gênesis 24)!
+                    </p>
+                    
+                    <div class="relative py-4">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-pink-200"></div>
+                        </div>
+                        <div class="relative flex justify-center">
+                            <span class="px-4 bg-white text-pink-500">
+                                <i data-feather="star" class="w-5 h-5"></i>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <p class="text-lg leading-relaxed" data-aos="fade-left">
+                        Este é o segundo desafio: O que era o "espinho na carne" citado por Paulo em 2ª Coríntios 12?
+                    </p>
+                </div>
+                
+                <div class="mt-10">
+                    <p class="text-lg text-pink-600 font-medium italic">
+                        Responda-me no dia 03/10 após o culto.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <script>
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out-quad'
+        });
+        feather.replace();
+        
+        // Create falling petals
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.getElementById('petals-container');
+            const petalCount = 15;
+            
+            for (let i = 0; i < petalCount; i++) {
+                createPetal();
+            }
+            
+            function createPetal() {
+                const petal = document.createElement('div');
+                petal.className = 'rose-petal';
+                
+                // Random size
+                const size = Math.random() * 15 + 5;
+                petal.style.width = `${size}px`;
+                petal.style.height = `${size}px`;
+                
+                // Random position
+                petal.style.left = `${Math.random() * 100}vw`;
+                petal.style.top = `-${size}px`;
+                
+                // Random animation duration
+                const duration = Math.random() * 10 + 5;
+                petal.style.animationDuration = `${duration}s`;
+                
+                // Random delay
+                petal.style.animationDelay = `${Math.random() * 5}s`;
+                
+                container.appendChild(petal);
+                
+                // Reset petal position after animation completes
+                setTimeout(() => {
+                    petal.remove();
+                    createPetal();
+                }, duration * 1000);
+            }
+        });
+    </script>
+</body>
+</html>
