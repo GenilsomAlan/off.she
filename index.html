@@ -1,130 +1,301 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Desafio</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-    <script src="https://unpkg.com/feather-icons"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400&display=swap');
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: #fff5f5;
-        }
-        .heart-beat {
-            animation: heartbeat 1.5s ease-in-out infinite;
-        }
-        @keyframes heartbeat {
-            0% { transform: scale(1); }
-            25% { transform: scale(1.1); }
-            50% { transform: scale(1); }
-            75% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-        .rose-petal {
-            position: absolute;
-            background-color: #ff6b81;
-            opacity: 0.6;
-            border-radius: 50% 0 50% 50%;
-            animation: falling linear infinite;
-        }
-        @keyframes falling {
-            to {
-                transform: translateY(100vh) rotate(360deg);
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Desde 12/04/2022</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Segoe UI", sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+
+      background: radial-gradient(circle at center, #1e1e2f, #0a0a12);
+      color: #eaeaf0;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+
+      text-align: center;
+      padding: 40px 30px;
+      border-radius: 20px;
+
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(10px);
+
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+      max-width: 600px;
+      width: 90%;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      font-weight: 400;
+      margin-bottom: 10px;
+      color: #cbd5f5;
+    }
+
+    h2 {
+      font-size: 0.9rem;
+      font-weight: 300;
+      margin-bottom: 30px;
+      color: #8b8ba7;
+      font-style: italic;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .card {
+      padding: 15px;
+      border-radius: 12px;
+
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+
+      transition: 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .value {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #f1f5ff;
+    }
+
+    .label {
+      font-size: 0.75rem;
+      margin-top: 4px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #7c7c9a;
+    }
+
+    .footer {
+      margin-top: 30px;
+      font-size: 0.8rem;
+      color: #6b6b85;
+      opacity: 0.7;
+    }
+
+    /* Overlay */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+
+      background: rgba(5, 5, 10, 0.85);
+      backdrop-filter: blur(8px);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.8s ease;
+
+      z-index: 2;
+    }
+
+    .overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .overlay-content {
+      text-align: center;
+      color: #dcdcf5;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      max-width: 400px;
+      padding: 20px;
+    }
+
+    @media (max-width: 500px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
-    <div id="petals-container" class="fixed inset-0 overflow-hidden pointer-events-none"></div>
-    
-    <div class="max-w-2xl w-full bg-white rounded-xl shadow-lg overflow-hidden" data-aos="fade-up">
-        <div class="relative">
-            <div class="absolute -top-16 left-1/2 transform -translate-x-1/2">
-                <i data-feather="heart" class="heart-beat text-pink-500 w-16 h-16"></i>
-            </div>
-            <div class="p-8 pt-16 text-center">
-                <h1 class="text-3xl font-serif font-bold text-pink-600 mb-6">Desafio Bíblico</h1>
-                
-                <div class="space-y-6 text-gray-700">
-                    <p class="text-lg leading-relaxed" data-aos="fade-right">
-                        Parabéns! Você passou no primeiro desafio (Gênesis 24)!
-                    </p>
-                    
-                    <div class="relative py-4">
-                        <div class="absolute inset-0 flex items-center">
-                            <div class="w-full border-t border-pink-200"></div>
-                        </div>
-                        <div class="relative flex justify-center">
-                            <span class="px-4 bg-white text-pink-500">
-                                <i data-feather="star" class="w-5 h-5"></i>
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <p class="text-lg leading-relaxed" data-aos="fade-left">
-                        Este é o segundo desafio: O que era o "espinho na carne" citado por Paulo em 2ª Coríntios 12?
-                    </p>
-                </div>
-                
-                <div class="mt-10">
-                    <p class="text-lg text-pink-600 font-medium italic">
-                        Responda-me no dia 03/10 após o culto.
-                    </p>
-                </div>
-            </div>
-        </div>
+
+<body>
+
+  <canvas id="bg"></canvas>
+
+  <div class="container">
+    <h1>12 de Abril de 2022</h1>
+    <h2>Desde a última vez que te vi</h2>
+
+    <div class="grid">
+      <div class="card"><div id="years" class="value">0</div><div class="label">Anos</div></div>
+      <div class="card"><div id="months" class="value">0</div><div class="label">Meses</div></div>
+      <div class="card"><div id="weeks" class="value">0</div><div class="label">Semanas</div></div>
+      <div class="card"><div id="days" class="value">0</div><div class="label">Dias</div></div>
+      <div class="card"><div id="hours" class="value">0</div><div class="label">Horas</div></div>
+      <div class="card"><div id="minutes" class="value">0</div><div class="label">Minutos</div></div>
+      <div class="card"><div id="seconds" class="value">0</div><div class="label">Segundos</div></div>
     </div>
 
-    <script>
-        AOS.init({
-            duration: 800,
-            easing: 'ease-in-out-quad'
+    <div class="footer">
+      O tempo não apagou — só ensinou
+    </div>
+  </div>
+
+  <!-- Overlay -->
+  <div class="overlay" id="overlay">
+    <div class="overlay-content">
+      <p>
+        Algumas coisas não voltam.<br><br>
+        Mas também não desaparecem.<br><br>
+        Elas permanecem... em silêncio.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // CONTADOR
+    const startDate = new Date(2022, 3, 12);
+
+    function getDiff() {
+      const now = new Date();
+
+      let years = now.getFullYear() - startDate.getFullYear();
+      let months = now.getMonth() - startDate.getMonth();
+      let days = now.getDate() - startDate.getDate();
+
+      if (days < 0) {
+        months--;
+        const lastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+        days += lastMonth.getDate();
+      }
+
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+
+      return { years, months, days };
+    }
+
+    function updateCounter() {
+      const now = new Date();
+      const diffMs = now - startDate;
+
+      const totalSeconds = Math.floor(diffMs / 1000);
+      const totalMinutes = Math.floor(totalSeconds / 60);
+      const totalHours = Math.floor(totalMinutes / 60);
+      const totalDays = Math.floor(totalHours / 24);
+      const totalWeeks = Math.floor(totalDays / 7);
+
+      const { years, months, days } = getDiff();
+
+      const seconds = totalSeconds % 60;
+      const minutes = totalMinutes % 60;
+      const hours = totalHours % 24;
+
+      document.getElementById("years").textContent = years;
+      document.getElementById("months").textContent = months;
+      document.getElementById("weeks").textContent = totalWeeks;
+      document.getElementById("days").textContent = days;
+      document.getElementById("hours").textContent = hours;
+      document.getElementById("minutes").textContent = minutes;
+      document.getElementById("seconds").textContent = seconds;
+    }
+
+    setInterval(updateCounter, 1000);
+    updateCounter();
+
+    // OVERLAY
+    setTimeout(() => {
+      document.getElementById("overlay").classList.add("active");
+    }, 4000);
+
+    document.getElementById("overlay").addEventListener("click", () => {
+      document.getElementById("overlay").classList.remove("active");
+    });
+
+    // FUNDO ANIMADO
+    const canvas = document.getElementById("bg");
+    const ctx = canvas.getContext("2d");
+
+    let particles = [];
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener("resize", resize);
+    resize();
+
+    function createParticles() {
+      particles = [];
+      for (let i = 0; i < 80; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 2,
+          speed: Math.random() * 0.3 + 0.1
         });
-        feather.replace();
-        
-        // Create falling petals
-        document.addEventListener('DOMContentLoaded', function() {
-            const container = document.getElementById('petals-container');
-            const petalCount = 15;
-            
-            for (let i = 0; i < petalCount; i++) {
-                createPetal();
-            }
-            
-            function createPetal() {
-                const petal = document.createElement('div');
-                petal.className = 'rose-petal';
-                
-                // Random size
-                const size = Math.random() * 15 + 5;
-                petal.style.width = `${size}px`;
-                petal.style.height = `${size}px`;
-                
-                // Random position
-                petal.style.left = `${Math.random() * 100}vw`;
-                petal.style.top = `-${size}px`;
-                
-                // Random animation duration
-                const duration = Math.random() * 10 + 5;
-                petal.style.animationDuration = `${duration}s`;
-                
-                // Random delay
-                petal.style.animationDelay = `${Math.random() * 5}s`;
-                
-                container.appendChild(petal);
-                
-                // Reset petal position after animation completes
-                setTimeout(() => {
-                    petal.remove();
-                    createPetal();
-                }, duration * 1000);
-            }
-        });
-    </script>
+      }
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "rgba(200, 200, 255, 0.3)";
+
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        p.y -= p.speed;
+
+        if (p.y < 0) {
+          p.y = canvas.height;
+          p.x = Math.random() * canvas.width;
+        }
+      });
+    }
+
+    function animate() {
+      drawParticles();
+      requestAnimationFrame(animate);
+    }
+
+    createParticles();
+    animate();
+  </script>
+
 </body>
 </html>
